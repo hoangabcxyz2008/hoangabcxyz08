@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sport News | Ultra Complete</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+
+body{
+background:#ececec;
+color:#222;
+transition:0.3s;
+}
+
+/* LOADER */
+#loader{
+position:fixed;
+width:100%;
+height:100%;
+background:#111;
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:9999;
+}
+
+.spinner{
+width:50px;
+height:50px;
+border:5px solid #444;
+border-top:5px solid red;
+border-radius:50%;
+animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* DARK MODE */
+.dark{background:#111;color:#eee;}
+.dark nav{background:#1a1a1a}
+.dark .card,.dark table{background:rgba(30,30,30,0.6);color:#eee}
+.dark th{background:#000}
+
+/* HEADER */
+header{
+background:#1f1f1f;
+color:#f5f5f5;
+padding:20px;
+text-align:center;
+font-size:22px;
+font-weight:600;
+position:sticky;
+top:0;
+z-index:1000;
+}
+
+#darkToggle{
+position:fixed;
+right:15px;
+top:50%;
+transform:translateY(-50%);
+padding:10px 14px;
+cursor:pointer;
+border:none;
+border-radius:50px;
+background:#1f1f1f;
+color:#fff;
+box-shadow:0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* NAV */
+nav{
+background:#fff;
+text-align:center;
+padding:12px;
+border-bottom:1px solid #ddd;
+}
+
+nav button{
+background:none;
+border:none;
+margin:6px 10px;
+font-size:14px;
+cursor:pointer;
+color:#444;
+transition:0.2s;
+}
+nav button:hover{color:#8b0000}
+
+/* SECTION */
+section{
+display:none;
+padding:50px 10%;
+opacity:0;
+transition:0.4s;
+}
+section.active{
+display:block;
+opacity:1;
+}
+
+/* GRID */
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+margin-top:25px;
+}
+
+.card{
+background:rgba(255,255,255,0.7);
+backdrop-filter:blur(10px);
+padding:18px;
+border-radius:12px;
+box-shadow:0 8px 20px rgba(0,0,0,0.1);
+transition:0.3s ease;
+}
+.card:hover{
+transform:translateY(-8px) scale(1.03);
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* TABLE */
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+background:#fff;
+}
+th,td{
+padding:12px;
+text-align:center;
+border-bottom:1px solid #eee;
+}
+th{
+background:#2c2c2c;
+color:#fff;
+}
+
+.countdown{
+margin-top:20px;
+font-size:18px;
+color:#8b0000;
+font-weight:500;
+}
+
+/* GALLERY */
+.gallery{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:15px;
+margin-top:20px;
+}
+.gallery img{
+width:100%;
+border-radius:8px;
+}
+
+/* MARQUEE */
+.marquee{
+width:100%;
+overflow:hidden;
+background:linear-gradient(270deg,#111,#8b0000,#000,#8b0000,#111);
+background-size:400% 400%;
+animation:bgMove 10s ease infinite;
+}
+.marquee-track{
+display:flex;
+width:max-content;
+animation:scroll 18s linear infinite;
+}
+.marquee-text{
+white-space:nowrap;
+padding:10px 50px;
+font-size:clamp(14px,2.5vw,20px);
+font-weight:700;
+}
+.rgb-text{
+background:linear-gradient(
+90deg,#ff0000,#ff7f00,#ffff00,#00ff00,
+#00ffff,#0000ff,#8b00ff,#ff0000);
+background-size:300% 100%;
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+animation:rgbMove 4s linear infinite;
+}
+@keyframes scroll{
+from{transform:translateX(0)}
+to{transform:translateX(-50%)}
+}
+@keyframes rgbMove{
+from{background-position:0% 50%}
+to{background-position:300% 50%}
+}
+@keyframes bgMove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+/* SNOW */
+.snow{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+pointer-events:none;
+z-index:0;
+overflow:hidden;
+}
+.snow span{
+position:absolute;
+top:-10px;
+color:white;
+animation:fall linear infinite;
+}
+@keyframes fall{
+0%{transform:translateY(0)}
+100%{transform:translateY(110vh)}
+}
+</style>
+</head>
+
+<body>
+
+<audio id="clickSound" preload="auto">
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b63c9.mp3">
+</audio>
+
+<audio id="bgMusic" autoplay loop>
+<source src="nhacnen.mp3" type="audio/mpeg">
+</audio>
+
+<div id="loader"><div class="spinner"></div></div>
+
+<header>
+Welcome to our sports club!
+<button id="darkToggle">🌙</button>
+<img src="https://images.unsplash.com/photo-1518091043644-c1d4457512c6"
+     alt="Poster Bóng đá tông tối"
+     width="380">
+</header>
+
+<div class="marquee">
+<div class="marquee-track">
+<div class="marquee-text">
+<span class="rgb-text">🔥 Chung kết ngày 30/03/2026 tại Sân Chính - Đừng bỏ lỡ! 🔥</span>
+</div>
+<div class="marquee-text">
+<span class="rgb-text">🔥 Chung kết ngày 30/03/2026 tại Sân Chính - Đừng bỏ lỡ! 🔥</span>
+</div>
+</div>
+</div>
+
+<nav>
+<button onclick="showPage('home')">Trang chủ</button>
+<button onclick="showPage('news')">Tin tức</button>
+<button onclick="showPage('schedule')">Lịch thi đấu</button>
+<button onclick="showPage('ranking')">Bảng xếp hạng</button>
+<button onclick="showPage('players')">Cầu thủ</button>
+<button onclick="showPage('gallery')">Thư viện</button>
+<button onclick="showPage('message')">Thông điệp</button>
+<button onclick="showPage('countdown')">Chung kết</button>
+</nav>
+
+<section id="home" class="active">
+<h2>Chào mừng đến với Sport News⚽️</h2>
+<p>
+Dù bạn là người mới bắt đầu hay đã có kinh nghiệm, Esport luôn chào đón bạn tham gia, học hỏi và chinh phục những đỉnh cao mới.
+
+🔥 Hãy sẵn sàng – vào trận thôi! 🔥.</p>
+</section>
+
+<section id="news">
+<h2>Tin tức nổi bật</h2>
+<div class="grid">
+<div class="card"><h3>Chiến thắng 3-1</h3><p>Đội tuyển Việt Nam tiếp tục dẫn đầu bảng.</p></div>
+<div class="card"><h3>Buổi tập chiến thuật</h3><p>Sơ đồ 4-3-3 Tấn Công.</p></div>
+<div class="card"><h3>Thành viên xuất sắc</h3><p>Tuấn ghi bàn quyết định.</p></div>
+</div>
+</section>
+
+<section id="schedule">
+<h2>Lịch thi đấu</h2>
+<table>
+<tr><th>Ngày</th><th>Trận đấu</th><th>Địa điểm</th></tr>
+<tr><td>20/03</td><td>Việt Nam vs Đức</td><td>Sân A</td></tr>
+<tr><td>25/03</td><td>Việt Nam vs Hàn Quốc</td><td>Sân B</td></tr>
+<tr><td>30/03</td><td>Chung kết</td><td>Sân Chính</td></tr>
+</table>
+</section>
+
+<section id="ranking">
+<h2>Bảng xếp hạng</h2>
+<table>
+<tr><th>Hạng</th><th>Đội</th><th>Điểm</th></tr>
+<tr><td>1</td><td>Việt Nam</td><td>9</td></tr>
+<tr><td>2</td><td>Hàn Quốc</td><td>6</td></tr>
+<tr><td>3</td><td>Đức</td><td>3</td></tr>
+</table>
+</section>
+
+<section id="players">
+<h2>Danh sách cầu thủ</h2>
+<div class="grid">
+<div class="card"><h3>Tuấn</h3><p>Tiền đạo(ST)</p></div>
+<div class="card"><h3>My</h3><p>Hậu Vệ(CM)</p></div>
+<div class="card"><h3>Hoàng</h3><p>Hậu vệ(RB)</p></div>
+<div class="card"><h3>Uyên Nhi</h3><p>Hậu vệ(RB)</p></div>
+<div class="card"><h3>Tường Vi</h3><p>Tiền Vệ(LB)</p></div>
+<div class="card"><h3>Thuý Vi</h3><p>Trung Vệ(LB)</p></div>
+<div class="card"><h3>Duy</h3><p>Thủ Môn(GK)</p></div>
+<div class="card"><h3>C.Ronaldo</h3><p>Tiền Đạo(ST)</p></div>
+
+</section>
+
+<section id="gallery">
+<h2>Thư viện ảnh</h2>
+<div class="gallery">
+<img src="https://picsum.photos/id/1011/400/300">
+<img src="https://picsum.photos/id/1015/400/300">
+<img src="https://picsum.photos/id/1025/400/300">
+<img src="https://picsum.photos/id/1035/400/300">
+</div>
+</section>
+
+<section id="message">
+<h2>Thông điệp</h2>
+<p>Thể thao không chỉ là chiến thắng mà là hành trình rèn luyện và trưởng thành.</p>
+</section>
+
+<section id="countdown">
+<h2>Đếm ngược đến chung kết</h2>
+<div class="countdown" id="timer"></div>
+</section>
+
+<div class="snow"></div>
+
+<script>
+window.addEventListener("load",()=>{
+document.getElementById("loader").style.display="none"
+})
+
+function showPage(id){
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"))
+document.getElementById(id).classList.add("active")
+}
+
+document.getElementById("darkToggle").onclick=
+()=>document.body.classList.toggle("dark");
+
+/* Countdown */
+let eventDate=new Date("2026-03-30T15:00:00").getTime()
+let timer=document.getElementById("timer")
+setInterval(()=>{
+let now=new Date().getTime()
+let d=eventDate-now
+if(d<=0){timer.innerHTML="Trận đấu đang diễn ra!";return}
+let days=Math.floor(d/(1000*60*60*24))
+let hours=Math.floor((d%(1000*60*60*24))/(1000*60*60))
+let minutes=Math.floor((d%(1000*60*60))/(1000*60))
+let seconds=Math.floor((d%(1000*60))/1000)
+timer.innerHTML=`${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây`
+},1000)
+
+/* Snow */
+const snowContainer=document.querySelector(".snow");
+for(let i=0;i<40;i++){
+let snow=document.createElement("span");
+snow.innerHTML="❄";
+snow.style.left=Math.random()*100+"vw";
+snow.style.fontSize=(Math.random()*10+10)+"px";
+snow.style.animationDuration=(Math.random()*5+5)+"s";
+snowContainer.appendChild(snow);
+}
+
+/* Click sound */
+const clickSound=document.getElementById("clickSound");
+document.querySelectorAll("nav button").forEach(btn=>{
+btn.addEventListener("click",()=>{
+clickSound.currentTime=0;
+clickSound.volume=0.4;
+clickSound.play();
+})
+})
+
+/* Background music */
+const bgMusic=document.getElementById("bgMusic");
+bgMusic.volume=0.5;
+window.addEventListener("click",()=>{
+bgMusic.play();
+},{once:true})
+</script>
+
+</body>
+</html>
